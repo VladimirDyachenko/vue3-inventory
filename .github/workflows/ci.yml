@@ -34,7 +34,7 @@ jobs:
       - name: Run tests
         id: test
         run: |
-          npm run test -- --reporter=json --outputFile=vitest-report.json
+          npm run test:ci -- --reporter=json --outputFile=vitest-report.json
 
       - name: Upload test results
         if: always()
