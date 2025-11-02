@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --border: 222 15% 25%;
+    --input: 222 15% 20%;
+    --ring: 42 95% 55%;
+
+    --background: 222 20% 8%;
+    --foreground: 42 100% 95%;
+
+    --primary: 42 95% 55%;
+    --primary-foreground: 222 20% 8%;
+
+    --secondary: 222 15% 18%;
+    --secondary-foreground: 42 100% 95%;
+
+    --muted: 222 15% 20%;
+    --muted-foreground: 42 20% 65%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 42 100% 95%;
+
+    --accent: 204 85% 55%;
+    --accent-foreground: 222 20% 8%;
+
+    --card: 222 18% 12%;
+    --card-foreground: 42 100% 95%;
+
+    --radius: 0.5rem;
+
+    /* Rarity colors */
+    --rarity-common: 0 0% 60%;
+    --rarity-uncommon: 120 40% 50%;
+    --rarity-rare: 204 85% 55%;
+    --rarity-epic: 270 75% 60%;
+    --rarity-legendary: 42 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.list-leave-active {
+  pointer-events: none;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+}
