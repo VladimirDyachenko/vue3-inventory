@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  ci:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        id: test
+        run: |
+          npm run test -- --reporter=json --outputFile=vitest-report.json
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report
+          path: vitest-report.json
+
+      - name: Post test summary
+        if: always()
+        run: |
+          echo "## 🧪 Vitest Summary" >> $GITHUB_STEP_SUMMARY
+          if [ -f vitest-report.json ]; then
+            PASSED=$(jq '.numPassedTests' vitest-report.json)
+            FAILED=$(jq '.numFailedTests' vitest-report.json)
+            TOTAL=$(jq '.numTotalTests' vitest-report.json)
+            echo "✅ Passed: $PASSED" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Failed: $FAILED" >> $GITHUB_STEP_SUMMARY
+            echo "📊 Total: $TOTAL" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No test report found" >> $GITHUB_STEP_SUMMARY
+          fi
